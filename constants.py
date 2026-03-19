@@ -1,3 +1,4 @@
+"""Constants to be used throughout Asteroids project"""
 SCREEN_WIDTH: int = 1280
 SCREEN_HEIGHT: int = 720
 PLAYER_RADIUS: int = 20

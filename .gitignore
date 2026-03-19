@@ -12,3 +12,7 @@ wheels/
 # Logging files
 game_state.jsonl
 game_events.jsonl
+
+# Linting config
+.pylintrc
+setup.cfg
