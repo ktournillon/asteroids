@@ -1,8 +1,17 @@
+"""Defines player object"""
 import pygame
 
 from circleshape import CircleShape
 from shot import Shot
-from constants import LINE_WIDTH, PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS, SHOT_RADIUS
+from constants import (
+    LINE_WIDTH,
+    PLAYER_RADIUS,
+    PLAYER_TURN_SPEED,
+    PLAYER_SPEED,
+    PLAYER_SHOT_SPEED,
+    PLAYER_SHOOT_COOLDOWN_SECONDS,
+    SHOT_RADIUS
+)
 
 
 class Player(CircleShape):
@@ -49,7 +58,7 @@ class Player(CircleShape):
         rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
         self.position += rotated_with_speed_vector
 
-    def shoot(self):
+    def shoot(self) -> None:
         shot = Shot(self.position[0], self.position[1], SHOT_RADIUS)
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)

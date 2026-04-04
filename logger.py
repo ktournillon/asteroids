@@ -1,3 +1,4 @@
+"""Custom logger functionality for pygame"""
 import inspect
 import json
 import math
@@ -9,22 +10,23 @@ _FPS = 60
 _MAX_SECONDS = 16
 _SPRITE_SAMPLE_LIMIT = 10  # Maximum number of sprites to log per group
 
-_frame_count = 0
-_state_log_initialized = False
-_event_log_initialized = False
+_FRAME_COUNT = 0
+_STATE_LOG_INITIALIZED = False
+_EVENT_LOG_INITIALIZED = False
 _start_time = datetime.now()
 
 
-def log_state():
-    global _frame_count, _state_log_initialized
+def log_state() -> None:
+    """Loge game state to game_state.jsonl"""
+    global _FRAME_COUNT, _STATE_LOG_INITIALIZED
 
     # Stop logging after `_MAX_SECONDS` seconds
-    if _frame_count > _FPS * _MAX_SECONDS:
+    if _FRAME_COUNT > _FPS * _MAX_SECONDS:
         return
 
     # Take a snapshot approx. once per second
-    _frame_count += 1
-    if _frame_count % _FPS != 0:
+    _FRAME_COUNT += 1
+    if _FRAME_COUNT % _FPS != 0:
         return
 
     now = datetime.now()
@@ -102,34 +104,35 @@ def log_state():
     entry = {
         "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
         "elapsed_s": math.floor((now - _start_time).total_seconds()),
-        "frame": _frame_count,
+        "frame": _FRAME_COUNT,
         "screen_size": screen_size,
         **game_state,
     }
 
     # New log file on each run
-    mode = "w" if not _state_log_initialized else "a"
-    with open("game_state.jsonl", mode) as f:
+    mode = "w" if not _STATE_LOG_INITIALIZED else "a"
+    with open("game_state.jsonl", mode, encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
 
-    _state_log_initialized = True
+    _STATE_LOG_INITIALIZED = True
 
 
-def log_event(event_type, **details):
-    global _event_log_initialized
+def log_event(event_type, **details) -> None:
+    """Log events to game_events.jsonl"""
+    global _EVENT_LOG_INITIALIZED
 
     now = datetime.now()
 
     event = {
         "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
         "elapsed_s": math.floor((now - _start_time).total_seconds()),
-        "frame": _frame_count,
+        "frame": _FRAME_COUNT,
         "type": event_type,
         **details,
     }
 
-    mode = "w" if not _event_log_initialized else "a"
-    with open("game_events.jsonl", mode) as f:
+    mode = "w" if not _EVENT_LOG_INITIALIZED else "a"
+    with open("game_events.jsonl", mode, encoding="utf-8") as f:
         f.write(json.dumps(event) + "\n")
 
-    _event_log_initialized = True
+    _EVENT_LOG_INITIALIZED = True
